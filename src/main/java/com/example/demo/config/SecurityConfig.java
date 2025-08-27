@@ -1,8 +1,7 @@
-package com.example.demo;
+package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
@@ -34,16 +33,19 @@ public class SecurityConfig {
 
     @Bean
     public InMemoryUserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
+        UserDetails admin = User.withUsername("admin")
+                .password(passwordEncoder.encode("secret"))
+                .roles("ADMIN")
+                .build();
         UserDetails user1 = User.withUsername("user1")
                 .password(passwordEncoder.encode("pwd1"))
                 .roles("USER")
                 .build();
         UserDetails user2 = User.withUsername("user2")
-
                 .password(passwordEncoder.encode("pwd2"))
                 .roles("USER")
                 .build();
-        return new InMemoryUserDetailsManager(user1, user2);
+        return new InMemoryUserDetailsManager(admin, user1, user2);
     }
 
     @Bean
