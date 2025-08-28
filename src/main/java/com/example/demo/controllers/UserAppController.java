@@ -1,10 +1,10 @@
 package com.example.demo.controllers;
 
+import com.example.demo.models.UserApp;
 import com.example.demo.repositories.UserAppRepository;
+import com.example.demo.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user-app")
@@ -12,8 +12,20 @@ public class UserAppController {
     @Autowired
     private UserAppRepository userAppRepository;
 
+    @Autowired
+    CustomUserDetailsService customUserDetailsService;
+
     @GetMapping()
     public String userApp() throws Exception {
         return userAppRepository.findAll().toString();
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute UserApp userApp) throws Exception {
+        customUserDetailsService.createUser(
+                userApp.getEmail(),
+                userApp.getPassword()
+        );
+        return "utilisateur créé";
     }
 }
